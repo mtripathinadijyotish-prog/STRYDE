@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root,
+[data-accent="cyan"] {
+  --hud-accent: #00f0ff;
+  --hud-accent-ink: #08090c;
+  --hud-accent-text: #dbfcff;
+  --hud-accent-soft: rgba(0, 240, 255, 0.13);
+  --hud-accent-border: rgba(0, 240, 255, 0.48);
+  --hud-accent-glow: rgba(0, 240, 255, 0.42);
+  --hud-grid-line: rgba(0, 240, 255, 0.03);
+}
+
+[data-accent="violet"] {
+  --hud-accent: #a78bfa;
+  --hud-accent-ink: #08090c;
+  --hud-accent-text: #ede9fe;
+  --hud-accent-soft: rgba(167, 139, 250, 0.16);
+  --hud-accent-border: rgba(167, 139, 250, 0.52);
+  --hud-accent-glow: rgba(167, 139, 250, 0.42);
+  --hud-grid-line: rgba(167, 139, 250, 0.035);
+}
+
+[data-accent="emerald"] {
+  --hud-accent: #10b981;
+  --hud-accent-ink: #041d15;
+  --hud-accent-text: #d8ffe7;
+  --hud-accent-soft: rgba(16, 185, 129, 0.16);
+  --hud-accent-border: rgba(16, 185, 129, 0.52);
+  --hud-accent-glow: rgba(16, 185, 129, 0.42);
+  --hud-grid-line: rgba(16, 185, 129, 0.03);
+}
+
+@layer base {
+  html {
+    background-color: #08090c;
+    color: #e2e2ec;
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--hud-accent);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled),
+  a[href] {
+    cursor: pointer;
+  }
+}
+
+/* Layer 0: Deep Void Canvas with faint 24px rectangular grid at ~2.5% opacity */
+.hud-canvas-grid {
+  background-color: #08090c;
+  background-image:
+    linear-gradient(to right, var(--hud-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hud-grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Layer 1: Sub-Containers */
+.hud-layer-1 {
+  background-color: rgba(19, 22, 34, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Layer 2: Floating Cards & Active Quests */
+.hud-layer-2 {
+  background-color: rgba(26, 31, 48, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 20px -5px var(--hud-accent-soft);
+}
+
+/* Layer 3: Modals, Overlays, Level-Up Banners */
+.hud-layer-3 {
+  background-color: rgba(34, 41, 64, 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--hud-accent);
+  box-shadow: 0 0 35px rgba(139, 92, 246, 0.28), inset 0 0 20px rgba(0, 240, 255, 0.06);
+}
+
+/* Personalized Accent Utilities */
+.hud-btn-primary {
+  background-color: var(--hud-accent);
+  color: var(--hud-accent-ink);
+  transition: box-shadow 180ms ease, filter 180ms ease, transform 150ms ease;
+}
+
+.hud-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 0 16px var(--hud-accent-glow);
+  filter: brightness(1.06);
+}
+
+.hud-btn-primary:active:not(:disabled) {
+  transform: translateY(0.5px);
+}
+
+.hud-nav-active {
+  border-color: var(--hud-accent-border);
+  background-color: var(--hud-accent-soft);
+  color: var(--hud-accent-text);
+}
+
+.hud-accent-text {
+  color: var(--hud-accent);
+}
+
+/* Chamfered corner clip helpers for subtle sci-fi geometry */
+.hud-chamfer-sm {
+  clip-path: polygon(
+    0 4px,
+    4px 0,
+    100% 0,
+    100% calc(100% - 4px),
+    calc(100% - 4px) 100%,
+    0 100%
+  );
+}
+
+.hud-chamfer-md {
+  clip-path: polygon(
+    0 8px,
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%
+  );
+}
+
+/* Progress Bar Gradient Sweep */
+@keyframes hudSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.hud-bar-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.hud-bar-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 100%
+  );
+  animation: hudSweep 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Legendary Gold Shimmer */
+@keyframes legendaryShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.hud-legendary-chip {
+  background: linear-gradient(
+    110deg,
+    rgba(245, 158, 11, 0.1) 25%,
+    rgba(245, 158, 11, 0.28) 50%,
+    rgba(245, 158, 11, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: legendaryShimmer 3.2s linear infinite;
+}
+
+/* Glowing tracer strike-through on completed quest */
+.hud-tracer-strike {
+  position: relative;
+}
+
+.hud-tracer-strike::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 52%;
+  height: 1.5px;
+  background: linear-gradient(90deg, #10b981, var(--hud-accent));
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .hud-bar-sweep::after,
+  .hud-legendary-chip {
+    animation: none;
+  }
+}
+
+/* Subtle custom scrollbar for dark HUD panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0d14;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #282a31;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hud-accent-border);
+}

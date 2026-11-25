@@ -1,0 +1,6 @@
+{
+  "name": "STRYDE",
+  "description": "High-precision productivity console for daily missions, focus sprints, skill progression, and milestone roadmaps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
